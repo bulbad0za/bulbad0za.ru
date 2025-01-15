@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bulbad0za - bio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #252525;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        .header {
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #00ff00;
+            animation: blink 1s infinite;
+            margin-left: 5px;
+        }
+
+        .subtitle {
+            color: #00cc00;
+            font-size: 1.2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: #333;
+            border: none;
+            color: #00ff00;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #00ff00;
+            transform: scaleX(0);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-button:hover {
+            background: #444;
+        }
+
+        .tab-button:hover::after {
+            transform: scaleX(1);
+        }
+
+        .tab-button.active {
+            background: #00ff00;
+            color: #1e1e1e;
+        }
+
+        .tab-button.active::after {
+            transform: scaleX(1);
+        }
+
+        .content {
+            position: relative;
+            min-height: 400px; /* Фиксированная минимальная высота */
+            overflow: hidden; /* Предотвращает скачки при анимации */
+        }
+
+        .tab-content {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .tab-content.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            color: #00ff00;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contacts {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .contact-item:hover {
+            background-color: #444;
+            transform: translateY(-2px);
+        }
+
+        .device-grid, .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .device-card, .friend-card {
+            background: #333;
+            padding: 1rem;
+            border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .device-card:hover, .friend-card:hover {
+            transform: translateY(-2px);
+            background: #333;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .content {
+                min-height: 50rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">bulbad0za<span class="cursor"></span></h1>
+            <div class="subtitle">> <span id="dynamic-subtitle">budding 16 y.o. sysadmin</span></div>
+        </header>
+
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="about">about me</button>
+            <button class="tab-button" data-tab="devices">my devices</button>
+            <button class="tab-button" data-tab="projects">projects</button>
+            <button class="tab-button" data-tab="friends">friends</button>
+        </div>
+
+        <main class="content">
+            <div id="about" class="tab-content active">
+                <section class="section">
+                    <h2 class="section-title">> about me:</h2>
+                    <p>
+                        Hello everyone, I'm Oleg, an ordinary guy from Russia, Tyumen. 
+                        I am interested in IT technologies, system administration, a bit of programming and furry :3 
+                    </p>
+                    <p>
+                        I have a small set of old (and not only) devices, you can find them here.
+                        I have a small number of old devices, although I don't collect them.
+                    </p>
+                    <p>
+                        And again, I don't know what to write at the end, so I just wish you good luck ^^
+                    </p>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">> contacts:</h2>
+                    <div class="contacts">
+                        <a href="mailto:bulbad0za@furryporno.ru" class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            bulbad0za@furryporno.ru
+                        </a>
+                        <a href="https://github.com/bulbad0za" class="contact-item">
+                            <i class="fab fa-github"></i>
+                            github
+                        </a>
+                        <a href="https://t.me/ThinkPadL460" class="contact-item">
+                            <i class="fab fa-telegram"></i>
+                            telegram
+                        </a>
+                        <a href="https://t.me/bulbad0za" class="contact-item">
+                            <i class="fab fa-telegram"></i>
+                            tg channel
+                        </a>
+                        <a href="https://tiktok.com/@bulbad0za" class="contact-item">
+                            <i class="fab fa-tiktok"></i>
+                            tiktok
+                        </a>
+                        <a href="https://youtube.com/channel/UC7ps0DIlTn9lrPMObLaWUnA" class="contact-item">
+                            <i class="fab fa-youtube"></i>
+                            youtube
+                        </a>
+                        <a href="https://ovk.to/bulbad0za" class="contact-item">
+                            openvk
+                        </a>
+                        <a href="https://vepurovk.xyz/bulbad0za" class="contact-item">
+                            vepurovk
+                        </a>
+                    </div>
+                </section>
+            </div>
+
+            <div id="devices" class="tab-content">
+                <h2 class="section-title">> my devices:</h2>
+                <div class="device-grid">
+                    <div class="device-card">
+                        <h3><i class="fa fa-desktop"></i> Main PC</h3>
+                        <p>Specs:</p>
+                        <p>CPU - Intel Xeon E5-2630 v2</p>
+                        <p>RAM - 16Gb DDR3-1600</p>
+                        <p>GPU - Gigabyte GTX 750Ti 2Gb</p>
+                        <p>HDD - Seagate 500Gb</p>
+                    </div>
+                    <div class="device-card">
+                        <h3><i class="fa fa-mobile"></i> Phones</h3>
+                        <p>Samsung Galaxy S10e 6/128Gb - Main phone</p>
+                        <p>Microsoft Lumia 640 3G DS - Full work</p>
+                        <p>Nokia N8 - GSM not working</p>
+                        <p>HTC Desire - Full Work</p>
+                    </div>
+                    <div class="device-card">
+                        <h3><i class="fa fa-tablet"></i> Tablets</h3>
+                        <p>Lenovo IdeaPad A7600-H - Full work</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="projects" class="tab-content">
+                <h2 class="section-title">> my projects:</h2>
+                <div class="device-grid">
+                    <div class="device-card">
+                        <h3><i class="fas fa-users"></i> OVKisser</h3>
+                        <p>closed :( (but maybe come back)</p>
+                    </div>
+                    <div class="device-card">
+                        <h3><i class="fa fa-globe"></i> бойкиссер.рф</h3>
+                        <p>haven't figured out what to do with it yet.</p>
+                    </div>
+                    <div class="device-card">
+                        <h3><i class="fa fa-globe"></i> furry34.ru</h3>
+                        <p>and here too.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="friends" class="tab-content">
+                <h2 class="section-title">> my friends:</h2>
+                <div class="friends-grid">
+                    <div class="friend-card">
+                        <h3>Loroteber</h3>
+                        <a href="https://t.me/loroteber" class="contact-item">
+                            <i class="fab fa-telegram"></i>
+                            telegram
+                        </a>
+                        <a href="mailto:loroteber@furryporno.ru" class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            email
+                        </a>
+                        <a href="https://ovk.to/loroteber" class="contact-item">
+                            openvk
+                        </a>
+                    </div>
+                    <div class="friend-card">
+                        <h3>Zonerkin</h3>
+                        <a href="https://t.me/zonerkin" class="contact-item">
+                            <i class="fab fa-telegram"></i>
+                            telegram
+                        </a>
+                        <a href="https://furry.ru.net/" class="contact-item">
+                            <i class="fa fa-globe"></i>
+                            Furry Business
+                        </a>
+                    </div>
+                    <div class="friend-card">
+                        <h3>drel</h3>
+                        <a href="https://t.me/drel69" class="contact-item">
+                            <i class="fab fa-telegram"></i>
+                            telegram
+                        </a>
+                        <a href="https://ovk.to/drel" class="contact-item">
+                            openvk
+                        </a>
+                    </div>
+                    <div class="friend-card">
+                        <h3>TYMA223</h3>
+                        <a href="https://t.me/PuroChanged" class="contact-item">
+                            <i class="fab fa-telegram"></i>
+                            telegram
+                        </a>
+                        <a href="https://ovk.to/tyma223" class="contact-item">
+                            openvk
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const subtitles = [
+            "budding 16 y.o. sysadmin",
+            "pizduziast",
+            "thinkpad lover",
+            "silly",
+            "furry programmer :3",
+            "windows 10 mobile the best!",
+            "buy FurryVPN! t.me/furryvpn"
+        ];
+
+        function setRandomSubtitle() {
+            const subtitleElement = document.getElementById('dynamic-subtitle');
+            const randomIndex = Math.floor(Math.random() * subtitles.length);
+            subtitleElement.textContent = subtitles[randomIndex];
+        }
+
+        function initTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setRandomSubtitle();
+            initTabs();
+        });
+    </script>
+</body>
+</html>
