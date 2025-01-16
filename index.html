@@ -109,25 +109,24 @@
 
         .content {
             position: relative;
-            min-height: 400px; /* Фиксированная минимальная высота */
-            overflow: hidden; /* Предотвращает скачки при анимации */
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: auto;
         }
 
         .tab-content {
-            position: absolute;
+            display: none;
             width: 100%;
             opacity: 0;
             transform: scale(0.95);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
         }
 
         .tab-content.active {
+            display: block;
             opacity: 1;
             transform: translateY(0);
-            pointer-events: auto;
         }
-
         .section {
             margin-bottom: 1.5rem;
         }
@@ -181,6 +180,70 @@
             background: #333;
         }
 
+        .legacy-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .legacy-modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .legacy-modal-content {
+            background: #252525;
+            color: #00ff00;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            font-family: 'Courier New', monospace;
+        }
+
+        .legacy-modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 0.5rem;
+        }
+
+        .legacy-modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .legacy-button {
+            background: #333;
+            border: none;
+            color: #00ff00;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .legacy-button:hover {
+            background: #444;
+        }
+
+        .legacy-button.primary {
+            background: #006600;
+        }
+
+        .legacy-button.primary:hover {
+            background: #008800;
+        }
+
         @keyframes fadeInUp {
             from {
                 transform: translateY(20px);
@@ -201,10 +264,6 @@
             body {
                 padding: 1rem;
             }
-
-            .content {
-                min-height: 50rem;
-            }
             
             .container {
                 padding: 1rem;
@@ -221,6 +280,31 @@
     </style>
 </head>
 <body>
+    <!-- ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+         ⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿
+         ⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿
+         ⣿⣿⣿⣿⣧⠀⠀⠀⠀⠶⣶⠖⠒⠒⣶⣶⣶⣶⣶⡄⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⠉⠉⠉⢿⠉⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿
+         ⣿⣿⣿⣿⣿⣧⡀⠀⠀⢰⠇⠀⠀⠀⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⠀⠀⠀⠘⡇⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿
+         ⣿⡿⠿⣿⣿⣿⣿⡀⠀⣾⠀⠀⠀⠀⢿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⠀⠀⠀⠀⡇⠀⠀⠀⠹⠉⠉⠉⣹⣿⣿⣿⣿
+         ⣿⣷⡀⠀⠀⠀⠀⠀⠀⢿⠀⠀⠀⠀⢸⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⠃⠀⠀⠀⢀⡇⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿
+         ⣿⣿⣿⣦⣄⡀⠀⠀⠀⠘⢧⠀⠀⠀⠈⠻⣿⠿⠃⠀⠠⣤⣤⠄⠀⠀⠀⠀⠀⠙⠋⠁⠀⠀⠀⠀⠈⢁⠀⠀⠀⢠⣴⣿⣿⣿⣿⣿⣿⣿
+         ⣿⣿⣿⣿⣿⡏⠀⣶⠾⡇⢀⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣶⢿⣀⡾⠁⠀⠀⠈⢿⣿⣿⣿⣿⣿⣿⣿
+         ⣿⣿⣿⣿⡟⠀⠀⢀⢘⠛⢉⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⢀⣠⣤⣀⣀⣀⣠⠦⠀⠀⠀⠀⠀⣐⢚⠉⠀⠀⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿
+         ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ -->
+
+    <!-- ya pidoras -->
+
+    <div id="legacyModal" class="legacy-modal">
+        <div class="legacy-modal-content">
+            <h2 class="legacy-modal-title">Обнаружен устаревший браузер</h2>
+            <p>Похоже, вы используете устаревший браузер. Некоторые функции могут работать некорректно.</p>
+            <div class="legacy-modal-buttons">
+                <a href="old.html" class="legacy-button primary">Открыть версию для старых браузеров</a>
+                <button class="legacy-button" onclick="continueCurrent()">Продолжить в текущей версии</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header class="header">
             <h1 class="title">bulbad0za<span class="cursor"></span></h1>
@@ -244,7 +328,6 @@
                     </p>
                     <p>
                         I have a small set of old (and not only) devices, you can find them here.
-                        I have a small number of old devices, although I don't collect them.
                     </p>
                     <p>
                         And again, I don't know what to write at the end, so I just wish you good luck ^^
@@ -268,7 +351,7 @@
                         </a>
                         <a href="https://t.me/bulbad0za" class="contact-item">
                             <i class="fab fa-telegram"></i>
-                            tg channel
+                            main channel
                         </a>
                         <a href="https://tiktok.com/@bulbad0za" class="contact-item">
                             <i class="fab fa-tiktok"></i>
@@ -319,6 +402,10 @@
                     <div class="device-card">
                         <h3><i class="fas fa-users"></i> OVKisser</h3>
                         <p>closed :( (but maybe come back)</p>
+                    </div>
+                    <div class="device-card">
+                        <h3><i class="fas fa-shopping-bag"></i> old-apps.xyz</h3>
+                        <p>closed :(</p>
                     </div>
                     <div class="device-card">
                         <h3><i class="fa fa-globe"></i> бойкиссер.рф</h3>
@@ -385,6 +472,120 @@
     </div>
 
     <script>
+    function checkBrowser() {
+    // Проверка IE (более надёжный способ)
+    const isIE = (function() {
+        if (window.ActiveXObject !== undefined || "ActiveXObject" in window) return true;
+        if (navigator.userAgent.indexOf("MSIE ") > -1 || navigator.userAgent.indexOf("Trident/") > -1) return true;
+        return false;
+    })();
+
+    // Проверка Firefox
+    function getFirefoxVersion() {
+        const match = navigator.userAgent.match(/(Firefox|FxiOS)\/(\d+)\./);
+        return match ? parseInt(match[2]) : false;
+    }
+
+    // Проверка Chrome
+    function getChromeVersion() {
+        const match = navigator.userAgent.match(/(?:Chrome|CriOS)\/(\d+)\./);
+        return match ? parseInt(match[1]) : false;
+    }
+
+    // Проверка Edge Legacy
+    function isEdgeLegacy() {
+        return navigator.userAgent.indexOf("Edge/") > -1;
+    }
+
+    // Проверка базовых возможностей современных браузеров
+    const features = {
+        // Базовые ES6 функции
+        arrowFunctions: (function() {
+            try {
+                eval("var test = () => {};");
+                return true;
+            } catch(e) {
+                return false;
+            }
+        })(),
+        
+        // Проверка поддержки Promise
+        promises: typeof Promise !== 'undefined',
+        
+        // Проверка поддержки Fetch API
+        fetch: typeof fetch !== 'undefined',
+        
+        // Проверка поддержки CSS Grid
+        grid: (function() {
+            return window.CSS && CSS.supports && CSS.supports('display', 'grid');
+        })(),
+
+        // Проверка поддержки requestAnimationFrame
+        requestAnimationFrame: typeof window.requestAnimationFrame !== 'undefined'
+    };
+
+    // Получаем версии браузеров
+    const browserVersions = {
+        firefox: getFirefoxVersion(),
+        chrome: getChromeVersion(),
+        isIE: isIE,
+        isEdgeLegacy: isEdgeLegacy()
+    };
+
+    // Определяем устаревший браузер если:
+    const isOldBrowser = 
+        browserVersions.isIE || // любой IE
+        browserVersions.isEdgeLegacy || // Edge Legacy
+        (browserVersions.chrome && browserVersions.chrome < 49) || // Chrome старше 49
+        (browserVersions.firefox && browserVersions.firefox < 52) || // Firefox старше 52
+        !features.arrowFunctions || // нет поддержки стрелочных функций
+        !features.promises || // нет поддержки Promise
+        !features.requestAnimationFrame; // нет поддержки requestAnimationFrame
+
+    // Выводим информацию в консоль для отладки
+    console.log('Browser Check:', {
+        versions: browserVersions,
+        features: features,
+        isOldBrowser: isOldBrowser
+    });
+
+    if (isOldBrowser) {
+        // Показываем модальное окно
+        const modal = document.getElementById('legacyModal');
+        if (modal) {
+            modal.classList.add('show');
+        } else {
+            alert('Вы используете устаревший браузер. Некоторые функции могут работать некорректно.');
+        }
+    }
+}
+
+// Запускаем проверку при загрузке страницы
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkBrowser);
+} else {
+    checkBrowser();
+}
+
+        function continueCurrent() {
+            document.getElementById('legacyModal').classList.remove('show');
+            // Сохраняем выбор пользователя
+            try {
+                localStorage.setItem('browserChoice', 'current');
+            } catch(e) {
+                // Игнорируем ошибку если localStorage недоступен
+            }
+        }
+
+        // Проверяем, не выбрал ли пользователь ранее продолжить в текущей версии
+        function checkUserChoice() {
+            try {
+                return localStorage.getItem('browserChoice') === 'current';
+            } catch(e) {
+                return false;
+            }
+        }
+
         const subtitles = [
             "budding 16 y.o. sysadmin",
             "pizduziast",
@@ -392,7 +593,8 @@
             "silly",
             "furry programmer :3",
             "windows 10 mobile the best!",
-            "buy FurryVPN! t.me/furryvpn"
+            "buy FurryVPN! t.me/furryvpn",
+            "/ᐠ - ˕ -マ"
         ];
 
         function setRandomSubtitle() {
@@ -404,24 +606,108 @@
         function initTabs() {
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
+            const contentContainer = document.querySelector('.content');
+
+            function setContentHeight(activeTab) {
+                contentContainer.style.height = `${activeTab.offsetHeight}px`;
+            }
+
+            const activeTab = document.querySelector('.tab-content.active');
+            setContentHeight(activeTab);
 
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const tabId = button.getAttribute('data-tab');
+                    const newActiveTab = document.getElementById(tabId);
 
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     tabContents.forEach(content => content.classList.remove('active'));
 
                     button.classList.add('active');
-                    document.getElementById(tabId).classList.add('active');
+                    newActiveTab.classList.add('active');
+            
+                    setContentHeight(newActiveTab);
                 });
+            });
+
+            window.addEventListener('resize', () => {
+                const activeTab = document.querySelector('.tab-content.active');
+                setContentHeight(activeTab);
             });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            if (!checkUserChoice()) {
+                checkBrowser();
+            }
             setRandomSubtitle();
             initTabs();
         });
     </script>
+    <noscript>
+        <style>
+            /* Стили для случая отключенного JavaScript */
+            .noscript-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 1000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+    
+            .noscript-modal-content {
+                background: #252525;
+                color: #00ff00;
+                padding: 2rem;
+                border-radius: 8px;
+                max-width: 500px;
+                width: 90%;
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+                font-family: 'Courier New', monospace;
+            }
+    
+            .noscript-modal-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                border-bottom: 2px solid #00ff00;
+                padding-bottom: 0.5rem;
+            }
+    
+            .noscript-button {
+                display: inline-block;
+                background: #006600;
+                border: none;
+                color: #00ff00;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                font-family: 'Courier New', monospace;
+                border-radius: 4px;
+                text-decoration: none;
+                margin-top: 1rem;
+            }
+    
+            .noscript-button:hover {
+                background: #008800;
+            }
+    
+            /* Скрываем основной контент при отключенном JavaScript */
+            .container {
+                display: none !important;
+            }
+        </style>
+        <div class="noscript-modal">
+            <div class="noscript-modal-content">
+                <h2 class="noscript-modal-title">JavaScript отключен</h2>
+                <p>Для корректной работы сайта необходимо включить поддержку JavaScript.</p>
+                <p>Если вы используете устаревший браузер, вы можете:</p>
+                <a href="old.html" class="noscript-button">Открыть версию для старых браузеров</a>
+            </div>
+        </div>
+    </noscript>
 </body>
 </html>
